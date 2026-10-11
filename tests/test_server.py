@@ -44,6 +44,44 @@ class WebTests(unittest.TestCase):
             self.assertEqual(self.request('/api/search', body, headers)[0], 403)
         self.assertEqual(self.request('/api/search', {'query': PII, 'extensions': []})[0], 400)
 
+    def test_public_assets_with_injected_origin_keep_correct_mime_types(self):
+        for origin in ('null', '', 'chrome-extension://test', 'http://127.0.0.1:13006'):
+            for path, mime in (('/', 'text/html'), ('/style.css', 'text/css'), ('/app.js', 'text/javascript'),
+                               ('/images/logo.svg', 'image/svg+xml'), ('/images/supplement-documents.svg', 'image/svg+xml'),
+                               ('/images/supplement-formats.svg', 'image/svg+xml'), ('/api/settings', 'application/json')):
+                with self.subTest(origin=origin, path=path):
+                    status, headers, body = self.request(path, headers={'Origin': origin})
+                    self.assertEqual(status, 200)
+                    self.assertEqual(headers['Content-Type'], mime + '; charset=utf-8')
+                    self.assertTrue(body)
+                    self.assertEqual(self.request(path, headers={'Host':'attacker.test','Origin':origin})[0],403)
+            self.assertEqual(self.request('/api/search', {'query':PII}, headers={'Origin':origin})[0],403)
+            self.assertEqual(self.request('/api/downloads/'+'a'*32+'/file', headers={'Origin':origin})[0],403)
+
+    def test_browser_same_origin_survives_local_header_rewriting(self):
+        for origin in ('null', 'http://127.0.0.1:53935', 'chrome-extension://test'):
+            headers = {'Origin': origin, 'Sec-Fetch-Site': 'same-origin'}
+            with self.subTest(origin=origin), patch.object(search, 'probe', side_effect=lambda file, *_: {**file, 'status': 'missing'}):
+                status, _, body = self.request('/api/search', {'query': PII, 'maximum': 1, 'extensions': ['pdf']}, headers)
+                self.assertEqual(status, 200)
+                self.assertIn(b'event: done\n', body)
+            self.assertEqual(self.request('/api/downloads', {'pii': 'invalid'}, headers)[0], 400)
+            self.assertEqual(self.request('/api/downloads/'+'a'*32+'/events', headers=headers)[0], 404)
+            self.assertEqual(self.request('/api/downloads/'+'a'*32+'/file', headers=headers)[0], 404)
+            self.assertEqual(self.request('/api/search', {'query': PII}, {**headers, 'X-Local-Request': ''})[0], 403)
+        for site in ('cross-site', 'same-site'):
+            headers = {'Origin': f'http://127.0.0.1:{self.port}', 'Sec-Fetch-Site': site}
+            self.assertEqual(self.request('/api/search', {'query': PII}, headers)[0], 403)
+            self.assertEqual(self.request('/api/downloads/'+'a'*32+'/file', headers=headers)[0], 403)
+
+    def test_default_formats_can_finish_search_including_mp4(self):
+        with patch.object(search, 'probe', side_effect=lambda file, *_: {**file, 'status': 'missing'}):
+            status, _, body = self.request('/api/search', {'query': PII})
+        self.assertEqual(status, 200)
+        self.assertIn(b'.mp4', body)
+        self.assertIn(b'event: done\n', body)
+        self.assertNotIn(b'event: error\n', body)
+
     def test_search_is_sse_and_failure_cannot_reuse_previous_identity(self):
         with patch.object(search, 'probe', side_effect=lambda file, *_: {**file, 'status': 'found', 'size': 10}):
             status, headers, body = self.request('/api/search', {'query': PII, 'maximum': 1, 'extensions': ['pdf']})

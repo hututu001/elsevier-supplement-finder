@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 EXTENSIONS = ('pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'zip', 'mp4', 'mov', 'jpg', 'tif', 'png', 'gif', 'jpeg', 'tiff')
 DEFAULT_EXTENSIONS = EXTENSIONS[:15]
 PII = re.compile(r'S\d{15,20}X?')
-FILE_KEY = re.compile(r'(\d{1,3})\.([a-z]+)')
+FILE_KEY = re.compile(r'(\d{1,3})\.([a-z0-9]+)')
 MAX_FILE_BYTES = 2 * 1024**3
 
 

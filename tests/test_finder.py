@@ -26,6 +26,8 @@ class ProbeTests(unittest.TestCase):
         search.CACHE.clear()
 
     def test_candidate_validation_and_search_settings(self):
+        for extension in network.EXTENSIONS:
+            self.assertTrue(network.attachment(PII, '1.' + extension)['url'].endswith('.' + extension))
         self.assertIn('-mmc11.jpeg', network.attachment(PII, '11.jpeg')['url'])
         for key in ['0.pdf', '101.pdf', '../1.pdf', '1.exe', '1.pdf?x=1', 'https://example.com']:
             with self.assertRaises(ValueError):

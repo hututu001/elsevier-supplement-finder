@@ -13,6 +13,8 @@ from .search import SEARCH_SLOTS, search, validate_search
 
 STATIC = Path(__file__).resolve().parent.parent / 'static'
 ASSETS = {'/': ('index.html', 'text/html'), '/app.js': ('app.js', 'text/javascript'), '/style.css': ('style.css', 'text/css')}
+ASSETS['/images/logo.webp'] = ('images/logo.webp', 'image/webp')
+ASSETS['/images/favicon.png'] = ('images/favicon.png', 'image/png')
 for name in ('logo.svg', 'supplement-backdrop.svg', 'supplement-documents.svg', 'supplement-formats.svg'):
     ASSETS['/images/' + name] = ('images/' + name, 'image/svg+xml')
 POLICY = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
@@ -22,12 +24,18 @@ class Server(ThreadingHTTPServer):
     daemon_threads = True
 
     def __init__(self, address):
+        self.downloads = None
         super().__init__(address, Handler)
-        self.downloads = Downloads()
+        try:
+            self.downloads = Downloads()
+        except BaseException:
+            self.server_close()
+            raise
 
     def server_close(self):
         super().server_close()
-        self.downloads.close()
+        if self.downloads is not None:
+            self.downloads.close()
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -38,14 +46,21 @@ class Handler(BaseHTTPRequestHandler):
         super().setup()
         self.connection.settimeout(15)
 
-    def trusted(self, mutation=False):
+    def trusted(self, mutation=False, *, public_resource=False):
         host = self.headers.get('Host', '')
         try:
             parsed = urlparse('http://' + host)
             if parsed.hostname not in {'localhost', '127.0.0.1', '::1'} or parsed.username or parsed.password or parsed.path:
                 return False
-            if self.headers.get('Origin') not in (None, 'http://' + host):
-                return False
+            if not public_resource:
+                # Fetch Metadata is set by the browser, not page JavaScript.
+                # Local network filters may rewrite Host/Origin when forwarding
+                # a request; same-origin requests still belong to this page.
+                site = self.headers.get('Sec-Fetch-Site')
+                if site in ('cross-site', 'same-site'):
+                    return False
+                if site != 'same-origin' and self.headers.get('Origin') not in (None, 'http://' + host):
+                    return False
         except ValueError:
             return False
         return not mutation or self.headers.get('X-Local-Request') == '1'
@@ -129,15 +144,17 @@ class Handler(BaseHTTPRequestHandler):
             self.json({'error': '无法创建本机临时文件，请检查磁盘空间与目录权限'}, 503)
 
     def do_GET(self):
-        if not self.trusted():
+        path = urlparse(self.path).path
+        public_resource = path in ASSETS or path in {'/api/settings', '/api/health'}
+        if not self.trusted(public_resource=public_resource):
             self.json({'error': '请使用 localhost 或 127.0.0.1 打开本地网页'}, 403)
             return
-        path = urlparse(self.path).path
         try:
             if path in ASSETS:
                 filename, mime = ASSETS[path]
                 data = (STATIC / filename).read_bytes()
-                self.headers_for(200, mime + '; charset=utf-8', len(data))
+                content_type = mime + '; charset=utf-8' if mime.startswith('text/') or mime == 'image/svg+xml' else mime
+                self.headers_for(200, content_type, len(data))
                 self.wfile.write(data)
             elif path == '/api/settings':
                 self.json({'extensions': EXTENSIONS, 'defaultExtensions': DEFAULT_EXTENSIONS,
