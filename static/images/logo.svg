@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">SciPass icon</title>
+  <desc id="desc">Teal-blue rounded app tile with a continuous circular pass loop and verification check.</desc>
+  <defs>
+    <linearGradient id="bg" x1="28" y1="20" x2="226" y2="234" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#16D9B5"/><stop offset="0.36" stop-color="#0899B6"/><stop offset="0.72" stop-color="#075B84"/><stop offset="1" stop-color="#073D4C"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(63 42) rotate(48) scale(158 145)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5BFFD8" stop-opacity=".46"/><stop offset="1" stop-color="#5BFFD8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="loop" x1="61" y1="55" x2="198" y2="203" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3FFF8"/><stop offset="0.25" stop-color="#5FF6CF"/><stop offset="0.56" stop-color="#18DCD1"/><stop offset="0.8" stop-color="#199CFF"/><stop offset="1" stop-color="#3157F4"/>
+    </linearGradient>
+    <linearGradient id="loop2" x1="42" y1="174" x2="196" y2="80" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#29EDC1"/><stop offset="0.48" stop-color="#2BE9DC"/><stop offset="1" stop-color="#DFFFF3"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#002A35" flood-opacity=".34"/></filter>
+    <clipPath id="tile"><rect x="12" y="12" width="232" height="232" rx="54"/></clipPath>
+  </defs>
+  <rect x="12" y="12" width="232" height="232" rx="54" fill="url(#bg)"/>
+  <g clip-path="url(#tile)"><rect x="12" y="12" width="232" height="232" rx="54" fill="url(#glow)"/></g>
+  <g filter="url(#shadow)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M81 78 C104 54 143 49 173 67 C204 86 215 127 199 159 C187 182 164 196 138 198" stroke="url(#loop)" stroke-width="28"/>
+    <path d="M176 181 C152 204 113 207 82 188 C51 169 41 129 56 98 C66 77 84 64 105 59" stroke="url(#loop2)" stroke-width="28"/>
+  </g>
+  <path d="M91 129 L119 157 L170 105" fill="none" stroke="#F6FFFC" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" filter="url(#shadow)"/>
+  <path d="M91 129 L119 157 L170 105" fill="none" stroke="#B8FFF0" stroke-opacity=".46" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

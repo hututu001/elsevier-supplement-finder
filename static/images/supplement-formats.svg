@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="1450 100 550 500" fill="none">
+  <defs>
+    <linearGradient id="wave" x1="60" y1="140" x2="1750" y2="880" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8eb7ff" stop-opacity=".23"/>
+      <stop offset=".5" stop-color="#bddaff" stop-opacity=".03"/>
+      <stop offset="1" stop-color="#85baff" stop-opacity=".2"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="200" y2="290" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff" stop-opacity=".94"/>
+      <stop offset="1" stop-color="#e8f0ff" stop-opacity=".7"/>
+    </linearGradient>
+    <linearGradient id="search" x1="0" y1="0" x2="190" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#84a7ff"/>
+      <stop offset="1" stop-color="#5484ee"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="120" y2="140" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".56"/>
+    </linearGradient>
+    <g id="tile">
+      <rect x="7" y="11" width="118" height="132" rx="20" fill="#bad3ff" fill-opacity=".25"/>
+      <rect width="118" height="132" rx="18" fill="url(#card)" stroke="#dce8ff"/>
+    </g>
+  </defs>
+  <g opacity=".8" font-family="Arial,sans-serif" font-size="16" font-weight="700" text-anchor="middle">
+    <ellipse cx="1737" cy="357" rx="257" ry="108" transform="rotate(-15 1737 357)" stroke="#bdd5ff" stroke-opacity=".4" stroke-width="16"/>
+    <g transform="translate(1505 237) rotate(9 59 66)">
+      <use href="#tile"/>
+      <path d="M38 24H69L87 42V101H38V24Z" fill="#ef7195"/>
+      <path d="M69 24V42H87" fill="#ffb4c9"/>
+      <path d="M47 53H65M47 62H75" stroke="#fff" stroke-opacity=".75" stroke-width="3"/>
+      <text x="62" y="86" fill="#fff">PDF</text>
+    </g>
+    <g transform="translate(1663 146) rotate(8 59 66)">
+      <use href="#tile"/>
+      <path d="M35 24H69L87 42V101H35V24Z" fill="#55bba1"/>
+      <path d="M69 24V42H87" fill="#a2e0d0"/>
+      <path d="M44 51H78M44 60H78M52 47V65M65 47V65" stroke="#fff" stroke-opacity=".8" stroke-width="2"/>
+      <text x="61" y="86" font-size="14" fill="#fff">XLSX</text>
+    </g>
+    <g transform="translate(1633 342) rotate(7 59 66)">
+      <use href="#tile"/>
+      <path d="M35 24H69L87 42V101H35V24Z" fill="#6b9ded"/>
+      <path d="M69 24V42H87" fill="#b6d1ff"/>
+      <path d="M44 52H68M44 61H78" stroke="#fff" stroke-opacity=".8" stroke-width="3"/>
+      <text x="61" y="86" font-size="14" fill="#fff">DOCX</text>
+    </g>
+    <g transform="translate(1779 257) rotate(9 59 66)">
+      <use href="#tile"/>
+      <path d="M35 24H69L87 42V101H35V24Z" fill="#a088e7"/>
+      <path d="M69 24V42H87" fill="#d5c5ff"/>
+      <path d="M56 48L72 59L56 70V48Z" fill="#fff"/>
+      <text x="61" y="89" fill="#fff">MP4</text>
+    </g>
+    <g transform="translate(1780 451) rotate(8 39 44) scale(.66)">
+      <use href="#tile"/>
+      <path d="M35 24H69L87 42V101H35V24Z" fill="#839aef"/>
+      <path d="M69 24V42H87" fill="#c5d2ff"/>
+      <circle cx="51" cy="52" r="5" fill="#fff"/>
+      <path d="M43 72L56 59L64 67L72 58L81 72H43Z" fill="#fff"/>
+      <text x="61" y="90" fill="#fff">JPG</text>
+    </g>
+    <path d="M1488 370C1543 433 1772 478 1915 324" stroke="white" stroke-opacity=".75" stroke-width="3"/>
+  </g>
+  <circle cx="1510" cy="172" r="12" fill="#c2d9ff" fill-opacity=".35"/>
+  <circle cx="1881" cy="546" r="19" fill="#a7caff" fill-opacity=".2"/>
+</svg>

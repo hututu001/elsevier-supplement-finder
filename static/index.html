@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在自己的电脑上查找 Elsevier 论文补充材料，支持标题、DOI、ScienceDirect 链接和 PII。">
+  <title>Elsevier 补充材料查找 · 微光本地版</title>
+  <link rel="icon" type="image/svg+xml" href="/images/logo.svg"><link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="7.5"/><path d="m16 16 5 5"/></symbol>
+  <symbol id="download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+  <symbol id="file" viewBox="0 0 24 24"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h8"/></symbol>
+  <symbol id="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="external" viewBox="0 0 24 24"><path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/></symbol>
+  <symbol id="settings" viewBox="0 0 24 24"><path d="M3 6h6m4 0h8M3 18h10m4 0h4"/><circle cx="11" cy="6" r="2"/><circle cx="15" cy="18" r="2"/></symbol>
+  <symbol id="package" viewBox="0 0 24 24"><path d="m12 2 10 5v10l-10 5-10-5V7zm0 10v10M2 7l10 5 10-5M7 4l10 5"/></symbol>
+  <symbol id="refresh" viewBox="0 0 24 24"><path d="M21 3v6h-6M3 21v-6h6M20 9a8 8 0 0 0-14-4L3 9m18 6-3 4a8 8 0 0 1-14-4"/></symbol>
+  <symbol id="moon" viewBox="0 0 24 24"><path d="M20.5 13A9 9 0 0 1 11 3.5a9 9 0 1 0 9.5 9.5Z"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+  <symbol id="stop" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></symbol>
+</defs></svg>
+<header class="site-header">
+  <nav class="nav" aria-label="主导航">
+    <a class="brand" href="/"><img src="/images/logo.svg" width="30" height="30" alt=""><span>微光<span class="brand-note">本地版</span></span></a>
+    <div class="nav-links">
+      <details class="nav-menu"><summary>使用说明<svg class="icon small"><use href="#chevron"/></svg></summary><div class="nav-popover help">
+        <p>输入完整标题、DOI、ScienceDirect 链接或 PII，点击查找即可。</p><p>材料在自己的电脑上检查和下载。关闭页面会停止检查；正在下载的任务可在下方取消。</p>
+        <a href="https://github.com/hututu001/elsevier-supplement-finder#readme" target="_blank" rel="noopener noreferrer">运行方式与查找原理 <svg class="icon small"><use href="#external"/></svg></a>
+      </div></details>
+      <details class="nav-menu friends"><summary>友情链接<svg class="icon small"><use href="#chevron"/></svg></summary><div class="nav-popover">
+        <a href="https://www.ablesci.com/" target="_blank" rel="noopener noreferrer">科研通</a>
+        <a href="https://www.sciencedirect.com/" target="_blank" rel="noopener noreferrer">ScienceDirect</a>
+        <a href="https://www.wenshushu.cn/" target="_blank" rel="noopener noreferrer">文叔叔</a>
+      </div></details>
+      <button class="icon-button" id="theme" type="button" aria-label="切换深浅色主题" title="切换主题"><svg class="icon"><use href="#moon"/></svg></button>
+    </div>
+  </nav>
+</header>
+<main>
+  <section class="hero" aria-labelledby="heading">
+    <img class="hero-art documents" src="/images/supplement-documents.svg" alt="" width="250" height="230">
+    <img class="hero-art formats" src="/images/supplement-formats.svg" alt="" width="250" height="230">
+    <h1 id="heading">爱思唯尔<span>补充材料</span>查找</h1>
+    <p>穷举之中，自有奇迹！</p>
+  </section>
+  <div class="workspace">
+    <section class="card query-card" aria-label="查找文献">
+      <form id="query-form" autocomplete="off">
+        <div class="query-row"><label class="sr-only" for="query">文章标题、DOI、ScienceDirect 链接或 PII</label>
+          <input id="query" name="query" type="search" maxlength="2000" placeholder="输入文章标题、DOI 或 ScienceDirect 链接" autocomplete="off" required>
+          <button id="submit" class="button primary" type="submit"><svg class="icon"><use href="#search"/></svg><span>查找</span></button>
+        </div>
+        <details class="settings"><summary><svg class="icon"><use href="#settings"/></svg>检索设置<svg class="icon small disclosure"><use href="#chevron"/></svg></summary>
+          <fieldset id="settings-fields">
+            <div class="settings-grid">
+              <label>检查到附件编号<input id="maximum" type="number" min="1" max="100" value="11" required><span class="hint">mmc1 至 mmc<span id="maximum-label">11</span></span></label>
+              <label>检查并发<input id="concurrency" type="number" min="1" max="88" value="32" required><span class="hint">根据本机网络调整，最高 88 路</span></label>
+            </div>
+            <p class="field-label">文件类型 <span id="candidate-count" class="hint"></span></p>
+            <div id="extensions" class="extension-options"></div>
+          </fieldset>
+        </details>
+      </form>
+      <div id="search-status" class="search-status" hidden><span class="spinner" aria-hidden="true"></span><span id="stage" role="status" aria-live="polite"></span><button id="pause" class="text-button" type="button">停止检查</button></div>
+      <p id="error" class="error" role="alert" hidden></p>
+    </section>
+      <section id="download-panel" class="card download-panel" aria-label="本机下载进度" hidden>
+        <div class="download-heading"><span id="download-status" role="status"></span><button id="cancel-download" class="text-button" type="button">取消下载</button></div>
+        <progress id="download-progress" max="100" aria-label="材料下载进度"></progress>
+        <div class="download-bottom"><span id="download-metrics" class="hint"></span><a id="save-again" class="text-button" hidden>再次保存</a><button id="retry-download" class="text-button" type="button" hidden>重试下载</button></div>
+        <p id="download-error" class="error" role="alert" hidden></p>
+      </section>
+    <section id="identity" class="card identity" aria-label="文献信息" hidden>
+      <div class="identity-top"><span class="matched"><svg class="icon small"><use href="#check"/></svg>已匹配文献</span><a id="article-link" target="_blank" rel="noopener noreferrer">打开原文<svg class="icon small"><use href="#external"/></svg></a></div>
+      <h2 id="article-title"></h2><div id="identifiers" class="identifiers"></div>
+    </section>
+    <section id="materials" class="card materials" aria-label="补充材料" hidden>
+      <div class="materials-head"><div><h2>补充材料 <span id="found-count" class="count"></span></h2><p id="progress-label" class="hint" role="status" aria-live="polite"></p></div>
+        <div class="actions"><button id="archive" class="button primary compact" type="button" hidden><svg class="icon small"><use href="#package"/></svg><span>一键打包</span></button>
+          <button id="continue" class="button compact" type="button" hidden><svg class="icon small"><use href="#search"/></svg>继续检查</button>
+          <button id="recheck" class="button compact" type="button"><svg class="icon small"><use href="#refresh"/></svg>重新检查</button></div>
+      </div>
+      <progress id="check-progress" max="100" value="0" aria-label="材料检查进度"></progress>
+      <div id="filters" class="filters" role="group" aria-label="按格式筛选" hidden></div>
+      <ul id="file-list" class="file-list"></ul>
+      <p id="empty" class="empty"></p>
+      <button id="expand" class="expand" type="button" aria-expanded="false" aria-controls="file-list" hidden></button>
+      <details id="uncertain" class="uncertain" hidden><summary>未确认的候选链接 <span id="uncertain-count" class="count"></span><svg class="icon small disclosure"><use href="#chevron"/></svg></summary><p class="hint">网络未确认不代表没有材料，可重试检查或直接打开。</p><ul id="uncertain-list"></ul><button id="expand-uncertain" class="text-button" type="button" hidden></button></details>
+    </section>
+  </div>
+</main>
+<footer>仅供学习研究，请遵守相关使用条款；结果可能遗漏或误判，请自行核对材料。</footer>
+</body>
+</html>

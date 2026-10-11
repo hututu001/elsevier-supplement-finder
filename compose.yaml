@@ -1,0 +1,13 @@
+services:
+  finder:
+    build: .
+    ports:
+      - "127.0.0.1:13006:13006"
+    restart: unless-stopped
+    init: true
+    environment:
+      # Optional. Set these in .env only if your own network requires a proxy.
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      NO_PROXY: localhost,127.0.0.1,::1
+    stop_grace_period: 30s
